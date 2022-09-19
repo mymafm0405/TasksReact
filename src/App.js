@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useContext } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import AllTasks from "./components/tasks/AllTasks";
+import NewTaskForm from "./components/tasks/NewTaskForm";
+import { UserContext } from "./store/UsersStore";
+import LoginForm from "./components/users/LoginForm";
+import User from "./components/users/User";
 
-function App() {
+const App = () => {
+  const userCtx = useContext(UserContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container className="mt-3">
+        <Row>
+          <Col>
+            <h1>Welcome to my Tasks App</h1>
+          </Col>
+          <Col>{userCtx.isLoggedIn && <User />}</Col>
+        </Row>
+        <Row>
+          {userCtx.isLoggedIn && (
+            <Col>
+              <NewTaskForm />
+              <AllTasks />
+            </Col>
+          )}
+
+          {!userCtx.isLoggedIn && <LoginForm />}
+        </Row>
+      </Container>
+    </>
   );
-}
+};
 
 export default App;
