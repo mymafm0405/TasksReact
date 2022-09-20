@@ -8,14 +8,8 @@ const NewTaskForm = () => {
 
   const submitTaskHandler = (event) => {
     event.preventDefault();
-    const id = Math.random();
 
-    const newTask = {
-      id: id,
-      text: taskInput.current.value,
-    };
-
-    tasksCtx.addTask(newTask);
+    tasksCtx.addTask(taskInput.current.value);
   };
 
   return (
@@ -32,6 +26,8 @@ const NewTaskForm = () => {
       <Button className="mt-3" variant="success" type="submit">
         Add task
       </Button>
+      {tasksCtx.loading && <p>Loading...</p>}
+      {tasksCtx.error && <p>{tasksCtx.error}</p>}
     </Form>
   );
 };

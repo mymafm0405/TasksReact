@@ -3,8 +3,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import AllTasks from "./components/tasks/AllTasks";
 import NewTaskForm from "./components/tasks/NewTaskForm";
 import { UserContext } from "./store/UsersStore";
-import LoginForm from "./components/users/LoginForm";
 import User from "./components/users/User";
+import Welcome from "./components/Welcome";
 
 const App = () => {
   const userCtx = useContext(UserContext);
@@ -26,7 +26,7 @@ const App = () => {
             </Col>
           )}
 
-          {!userCtx.isLoggedIn && <LoginForm />}
+          {!userCtx.isLoggedIn && <Welcome />}
         </Row>
       </Container>
     </>
