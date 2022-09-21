@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import AllTasks from "./components/tasks/AllTasks";
 import NewTaskForm from "./components/tasks/NewTaskForm";
@@ -8,6 +8,13 @@ import Welcome from "./components/Welcome";
 
 const App = () => {
   const userCtx = useContext(UserContext);
+  const setUserLogged = userCtx.autoSignIn;
+
+  useEffect(() => {
+    if (localStorage.getItem("myToken")) {
+      setUserLogged();
+    }
+  }, [setUserLogged]);
 
   return (
     <>

@@ -8,6 +8,7 @@ export const UserContext = React.createContext({
   signUp: (user) => {},
   loading: false,
   error: null,
+  autoSignIn: () => {},
 });
 
 const UserContextProvider = (props) => {
@@ -15,17 +16,36 @@ const UserContextProvider = (props) => {
   const { sendRequest, loading, error } = useHttp();
   const API = "AIzaSyAjYv8rt5pls968HbuIlMTjkp-Sbs0BwzQ";
 
-  const signInHandler = () => {
+  const signInHandler = (user) => {
+    console.log(user);
+    const applyData = (data) => {
+      localStorage.setItem("myToken", data.idToken);
+      setLoginStatus(true);
+    };
+    sendRequest(
+      {
+        url: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API}`,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: user,
+      },
+      applyData
+    );
+  };
+
+  const autoSignInHandler = () => {
     setLoginStatus(true);
   };
 
   const signOutHandler = () => {
     setLoginStatus(false);
+    localStorage.removeItem("myToken");
   };
 
   const signUpHandler = (user) => {
+    console.log(user);
     const applyData = (data) => {
-      localStorage.setItem({ 'myToken': data.idToken });
+      localStorage.setItem("myToken", data.idToken);
     };
     sendRequest(
       {
@@ -45,6 +65,7 @@ const UserContextProvider = (props) => {
     signUp: signUpHandler,
     loading: loading,
     error: error,
+    autoSignIn: autoSignInHandler,
   };
 
   return (
