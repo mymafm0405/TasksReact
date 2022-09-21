@@ -14,7 +14,6 @@ const LoginForm = () => {
       password: passwordInput.current.value,
       returnSecureToken: true,
     };
-    console.log(user);
     userCtx.singIn(user);
   };
 

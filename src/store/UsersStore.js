@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import useHttp from "../hooks/use-http";
+import { TasksContext } from "./TasksStore";
 
 export const UserContext = React.createContext({
   isLoggedIn: false,
@@ -14,6 +15,7 @@ export const UserContext = React.createContext({
 const UserContextProvider = (props) => {
   const [loginStatus, setLoginStatus] = useState();
   const { sendRequest, loading, error } = useHttp();
+  const tasksCtx = useContext(TasksContext);
   const API = "AIzaSyAjYv8rt5pls968HbuIlMTjkp-Sbs0BwzQ";
 
   const signInHandler = (user) => {
@@ -21,7 +23,6 @@ const UserContextProvider = (props) => {
       localStorage.setItem("myToken", data.idToken);
       localStorage.setItem("localId", data.localId);
       setLoginStatus(true);
-      console.log(data.localId)
     };
     sendRequest(
       {
@@ -42,10 +43,10 @@ const UserContextProvider = (props) => {
     setLoginStatus(false);
     localStorage.removeItem("myToken");
     localStorage.removeItem("localId");
+    tasksCtx.clearTasks()
   };
 
   const signUpHandler = (user) => {
-    console.log(user);
     const applyData = (data) => {
       localStorage.setItem("myToken", data.idToken);
       localStorage.setItem("localId", data.localId);

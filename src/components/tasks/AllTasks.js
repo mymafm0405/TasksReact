@@ -21,7 +21,7 @@ const AllTasks = () => {
         <p style={{ color: "#FF8697" }}>Click on a task to remove it</p>
       )}
 
-      {tasksCtx.tasks.length > 0 &&
+      {tasksCtx.tasks.length > 0 && !tasksCtx.loading &&
         tasksCtx.tasks.map((task) => (
           <Task onRemove={onRemoveHandler} key={task.id} task={task} />
         ))}

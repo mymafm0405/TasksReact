@@ -8,13 +8,13 @@ export const TasksContext = React.createContext({
   removeTask: (id) => {},
   loading: false,
   error: null,
+  clearTasks: () => {}
 });
 
 const TasksContextProvider = (props) => {
   const { loading, error, sendRequest } = useHttp();
   const [currentTasks, setCurrentTasks] = useState([]);
   const localId = localStorage.getItem("localId");
-  console.log(localId);
 
   const addTaskHandler = (text) => {
     const applyData = (data) => {
@@ -39,7 +39,9 @@ const TasksContextProvider = (props) => {
       const loadedTasks = [];
       if (data) {
         for (const key in data) {
-          loadedTasks.push({ id: key, userId: localId, task: data[key].task });
+          if (data[key].userId === localStorage.getItem('localId')) {
+            loadedTasks.push({ id: key, userId: localId, task: data[key].task });
+          }
         }
         setCurrentTasks(loadedTasks);
       }
@@ -68,6 +70,10 @@ const TasksContextProvider = (props) => {
     );
   };
 
+  const clearOldTasksHandler = () => {
+    setCurrentTasks([]);
+  }
+
   const ctxValue = {
     tasks: currentTasks,
     addTask: addTaskHandler,
@@ -75,6 +81,7 @@ const TasksContextProvider = (props) => {
     removeTask: removeTaskHandler,
     loading: loading,
     error: error,
+    clearTasks: clearOldTasksHandler
   };
 
   return (
