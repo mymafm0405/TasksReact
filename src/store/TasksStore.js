@@ -1,6 +1,5 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import useHttp from "../hooks/use-http";
-import { UserContext } from "./UsersStore";
 
 export const TasksContext = React.createContext({
   tasks: [],
@@ -14,8 +13,8 @@ export const TasksContext = React.createContext({
 const TasksContextProvider = (props) => {
   const { loading, error, sendRequest } = useHttp();
   const [currentTasks, setCurrentTasks] = useState([]);
-  const userCtx = useContext(UserContext);
-  const localId = userCtx.localId;
+  const localId = localStorage.getItem("localId");
+  console.log(localId);
 
   const addTaskHandler = (text) => {
     const applyData = (data) => {
@@ -29,7 +28,7 @@ const TasksContextProvider = (props) => {
         url: "https://todoreact-cb7b2-default-rtdb.firebaseio.com/tasks.json",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: { userId: userCtx.localId, task: text },
+        body: { userId: localId, task: text },
       },
       applyData
     );
@@ -38,10 +37,12 @@ const TasksContextProvider = (props) => {
   const getAllTasksHandler = useCallback(() => {
     const applyData = (data) => {
       const loadedTasks = [];
-      for (const key in data) {
-        loadedTasks.push({ id: key, userId: localId, task: data[key].task });
+      if (data) {
+        for (const key in data) {
+          loadedTasks.push({ id: key, userId: localId, task: data[key].task });
+        }
+        setCurrentTasks(loadedTasks);
       }
-      setCurrentTasks(loadedTasks);
     };
     sendRequest(
       { url: "https://todoreact-cb7b2-default-rtdb.firebaseio.com/tasks.json" },

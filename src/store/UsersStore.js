@@ -9,21 +9,18 @@ export const UserContext = React.createContext({
   loading: false,
   error: null,
   autoSignIn: () => {},
-  localId: ''
 });
 
 const UserContextProvider = (props) => {
   const [loginStatus, setLoginStatus] = useState();
-  const [userLocalId, setUserLocalId] = useState('');
   const { sendRequest, loading, error } = useHttp();
   const API = "AIzaSyAjYv8rt5pls968HbuIlMTjkp-Sbs0BwzQ";
 
   const signInHandler = (user) => {
-    console.log(user);
     const applyData = (data) => {
       localStorage.setItem("myToken", data.idToken);
+      localStorage.setItem("localId", data.localId);
       setLoginStatus(true);
-      setUserLocalId(data.localId);
       console.log(data.localId)
     };
     sendRequest(
@@ -44,12 +41,14 @@ const UserContextProvider = (props) => {
   const signOutHandler = () => {
     setLoginStatus(false);
     localStorage.removeItem("myToken");
+    localStorage.removeItem("localId");
   };
 
   const signUpHandler = (user) => {
     console.log(user);
     const applyData = (data) => {
       localStorage.setItem("myToken", data.idToken);
+      localStorage.setItem("localId", data.localId);
     };
     sendRequest(
       {
@@ -70,7 +69,6 @@ const UserContextProvider = (props) => {
     loading: loading,
     error: error,
     autoSignIn: autoSignInHandler,
-    localId: userLocalId
   };
 
   return (

@@ -10,7 +10,7 @@ const Task = ({ task, onRemove }) => {
       style={{ backgroundColor: "#f2f2f2" }}
     >
       <Card.Body>
-        <Card.Text>{task.text}</Card.Text>
+        <Card.Text>{task.task}</Card.Text>
       </Card.Body>
     </Card>
   );
