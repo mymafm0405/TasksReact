@@ -17,7 +17,8 @@ const SignUpForm = () => {
     const newUser = {
       email: emailInput.current.value,
       password: passwordInput.current.value,
-      returnSecureToken: true
+      returnSecureToken: true,
+      name: nameInput.current.value
     };
     userCtx.signUp(newUser);
   };

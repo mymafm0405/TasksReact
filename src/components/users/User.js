@@ -11,7 +11,7 @@ const User = ({ user }) => {
 
   return (
     <>
-      <h4>Welcome, Mahmoud (For now only!)</h4>
+      <h4>Welcome, {userCtx.displayName}</h4>
       <Button type="button" onClick={signOutHandler}>
         Signout
       </Button>

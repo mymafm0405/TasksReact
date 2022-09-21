@@ -39,7 +39,7 @@ const LoginForm = () => {
         Login
       </Button>
       {userCtx.loading && <Alert variant="warning">Please wait...</Alert>}
-      {userCtx.error && <Alert variant="danger">{userCtx.error}</Alert>}
+      {userCtx.error && !userCtx.loading && <Alert variant="danger">{userCtx.error}</Alert>}
     </Form>
   );
 };

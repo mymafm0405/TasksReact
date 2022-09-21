@@ -10,10 +10,12 @@ export const UserContext = React.createContext({
   loading: false,
   error: null,
   autoSignIn: () => {},
+  displayName: ''
 });
 
 const UserContextProvider = (props) => {
-  const [loginStatus, setLoginStatus] = useState();
+  const [loginStatus, setLoginStatus] = useState(false);
+  const [myDisplayName, setMyDisplayName] = useState('');
   const { sendRequest, loading, error } = useHttp();
   const tasksCtx = useContext(TasksContext);
   const API = "AIzaSyAjYv8rt5pls968HbuIlMTjkp-Sbs0BwzQ";
@@ -23,6 +25,7 @@ const UserContextProvider = (props) => {
       localStorage.setItem("myToken", data.idToken);
       localStorage.setItem("localId", data.localId);
       setLoginStatus(true);
+      setMyDisplayName(data.displayName)
     };
     sendRequest(
       {
@@ -43,13 +46,26 @@ const UserContextProvider = (props) => {
     setLoginStatus(false);
     localStorage.removeItem("myToken");
     localStorage.removeItem("localId");
-    tasksCtx.clearTasks()
+    tasksCtx.clearTasks();
   };
 
   const signUpHandler = (user) => {
     const applyData = (data) => {
       localStorage.setItem("myToken", data.idToken);
       localStorage.setItem("localId", data.localId);
+      sendRequest({
+        url: `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API}`,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          idToken: data.idToken,
+          displayName: user.name,
+          photoUrl: "",
+          deleteAttribute: [],
+          returnSecureToken: false,
+        },
+      });
+      setMyDisplayName(user.name)
     };
     sendRequest(
       {
@@ -70,6 +86,7 @@ const UserContextProvider = (props) => {
     loading: loading,
     error: error,
     autoSignIn: autoSignInHandler,
+    displayName: myDisplayName
   };
 
   return (
